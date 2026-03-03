@@ -1,3 +1,4 @@
+//loading all the lessons
 const loadLessons = async () => {
     const url = 'https://openapi.programming-hero.com/api/levels/all';
 
@@ -9,6 +10,7 @@ const loadLessons = async () => {
             displayLesson(json.data);
         })
 }
+//Loading level word
 const loadLevelWord = (id) => {
     manageSpinner(true);
 
@@ -144,3 +146,26 @@ const displayLesson = (lessons) => {
 }
 
 loadLessons();
+
+document.getElementById('btn-serach').addEventListener('click', () => {
+    removeActive()
+    const input = document.getElementById('input-search');
+    const searchValue = input.value.trim().toLowerCase();
+
+    fetch('https://openapi.programming-hero.com/api/words/all')
+        .then(response => response.json())
+        .then(json => {
+            const allwords = json.data;
+
+            if(searchValue.length < 1) {
+                displayLevelWord([]);
+                return;
+            }
+
+            const filterWords = allwords.filter(word => 
+                word.word.trim().toLowerCase().includes(searchValue)
+            );
+
+            displayLevelWord(filterWords)
+        })
+})
